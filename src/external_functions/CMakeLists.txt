@@ -1,0 +1,22 @@
+add_library(CIMR1SimpleOneshot_ExternalFunctions
+	CIMR1SimpleOneshot_ExternalFunctions.h
+	external_functions.c
+	whitegobo_functions.c
+	namespace_WG.h
+	namespace_CIMR1SO.h
+)
+
+target_link_libraries(CIMR1SimpleOneshot_ExternalFunctions PUBLIC
+	clips
+)
+
+target_link_libraries(CIMR1SimpleOneshot_ExternalFunctions PRIVATE
+	ClipsInfoModelRulemachine1
+	ClipsInfoModelRulemachine1_literals
+	CIMR1SimpleOneshot_child
+	CIMR1SimpleOneshot_import
+)
+
+target_include_directories(CIMR1SimpleOneshot_ExternalFunctions PUBLIC
+	"${CMAKE_CURRENT_SOURCE_DIR}/"
+)

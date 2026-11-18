@@ -1,0 +1,17 @@
+{
+    "@id": "",
+    "@context": "context.jsonld",
+    "baseIri": "http://example.com/",
+    "sequence": [
+        {
+            "name": "Assert",
+            "purpose": "Assert Action of RIF PRD",
+            "dialect": [
+                "PRD"
+            ],
+            "premise": "tests/Assert-premise.jsonld",
+            "@type": "PositiveEntailmentTestCase",
+            "exit": "tests/Assert-conclusion.jsonld"
+        }
+    ]
+}

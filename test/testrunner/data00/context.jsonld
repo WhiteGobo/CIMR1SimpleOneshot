@@ -1,0 +1,19 @@
+{
+"@context": {
+	"@vocab":   "https://WhiteGobo.github.io/TestsuiteCrate/vocab#",
+	"tsc":      "https://WhiteGobo.github.io/TestsuiteCrate/vocab#",
+	"mf":       "https://WhiteGobo.github.io/TestsuiteCrate/manifest#",
+	"dcterms":  "http://purl.org/dc/terms/",
+	"rdfs":     "http://www.w3.org/2000/01/rdf-schema#",
+	"xsd":      "http://www.w3.org/2001/XMLSchema#",
+	"sequence": {"@id": "mf:entries", "@type": "@id", "@container": "@list"},
+	"name": "http://schema.org/name",
+	"purpose": "http://schema.org/description",
+	"premise": {"@id": "mf:premise", "@type": "@id"},
+	"exit": {"@id": "mf:exit", "@type": "@id"},
+	"conclusion_rdf": "mf:conclusion_rdf",
+	"import": {"@id": "mf:import", "@type": "@id", "@container": "@list"},
+	"baseIri": {"@id": "tsc:baseIri", "@type": "@id"},
+	"dialect": {"@id": "mf:dialect", "@type": "@id", "@container": "@set"}
+}
+}
