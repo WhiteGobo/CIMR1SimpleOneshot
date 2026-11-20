@@ -4,14 +4,14 @@
     "baseIri": "http://example.com/",
     "sequence": [
         {
-            "name": "Assert",
-            "purpose": "Assert Action of RIF PRD",
+            "name": "EmptyRun",
+            "purpose": "Empty run produces assert atom ex:ok()",
             "dialect": [
                 "PRD"
             ],
-            "premise": "tests/Assert-premise.jsonld",
+            "premise": "data-empty.ttl",
             "@type": "PositiveEntailmentTestCase",
-            "exit": "tests/Assert-conclusion.jsonld"
+            "exit": "data-ok-import.rifps"
         }
     ]
 }

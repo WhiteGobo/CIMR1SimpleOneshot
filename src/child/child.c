@@ -24,12 +24,14 @@ static Child* lookup_cv2child(CIMR1SO_child_data*, DKey);
 static void init_cv2child(CIMR1SO_child_data*);
 
 static Child* Child_new(Environment *parent, CLIPSValue programid);
+static Child* Child_new_from_string(Environment *parent, const char* program);
 static void free_Child(Child*);
 
 static CIMR1SO_child_data* Environment_get_child_data(Environment*);
 static void Environment_release_CIMR1SimpeOneshot_child(Environment*);
 static size_t cv2hash(CLIPSValue);
 static bool find_this_data_in(const char* query, const char* query_format, const char* data, const char* data_format);
+static char* get_script_from_programid(Environment *env, CLIPSValue programid);
 
 int Environment_register_CIMR1SimpeOneshot_child(Environment* env){
 	bool success;
@@ -59,6 +61,22 @@ static void init_cv2child(CIMR1SO_child_data* data){
 static void Environment_release_CIMR1SimpeOneshot_child(Environment* env){
 	CIMR1SO_child_data* data = Environment_get_child_data(env);
 	fprintf(stderr, "ERROR Environment_release_CIMR1SimpeOneshot_child not implemented\n");
+}
+
+
+int Environment_generate_child_from_string(Environment* env, CLIPSValue childid, const char* program)
+{
+	Child* new;
+	if(childid.header->type == VOID_TYPE){
+		return 1;
+	}
+	CIMR1SO_child_data* data = Environment_get_child_data(env);
+
+	new = Child_new_from_string(env, program);
+	if(0 != insert_cv2child(env, data, childid, new)){
+		return 1;
+	}
+	return 0;
 }
 
 
@@ -158,7 +176,6 @@ bool Child_check_rif_data(Child* child, const char* data, const char* format){
 
 static RIFRDFQuery_Graph* myRIFRDFQuery_Graph_from_data(const char* data, const char* format);
 
-//static bool find_this_data_in(const char* conclusion_data, const char* format, const char* expected_conclusionpath){
 static bool find_this_data_in(const char* query, const char* query_format, const char* data, const char* data_format)
 {
 	int is_same;
@@ -295,13 +312,20 @@ static int compare_cv2child(DKey* x, DKey* y, size_t){
 	fprintf(stderr, "ERROR compare_cv2child not fully implemented\n");
 	return 1;
 }
-static char* get_script_from_programid(Environment *env, CLIPSValue programid);
+
 
 static Child* Child_new(Environment *parent, CLIPSValue programid){
 	char* script = get_script_from_programid(parent, programid);
 	if(script == NULL){
+		fprintf(stderr, "ERROR Child_new(programid)");
 		return NULL;
 	}
+	return Child_new_from_string(parent, script);
+}
+
+
+static Child* Child_new_from_string(Environment *parent, const char* script){
+	if(script == NULL) return NULL;
 	Child* env = CreateEnvironment();
 	if(0 != InfoModelRulemachine1Data_register(env)){
 		free_Child(env);
@@ -315,7 +339,7 @@ static Child* Child_new(Environment *parent, CLIPSValue programid){
 		free_Child(env);
 		return NULL;
 	}
-	if(LoadFromString(env, script, strlen(script))){
+	if(!LoadFromString(env, script, strlen(script))){
 		fprintf(stderr, "ERROR Child_new(broken script)\n");
 		free_Child(env);
 		return NULL;
@@ -323,17 +347,22 @@ static Child* Child_new(Environment *parent, CLIPSValue programid){
 	return env;
 }
 
+
 static char* get_script_from_programid(Environment *env, CLIPSValue programid){
+	const char* val;
 	Literal* tmplit = Literal_from_CLIPSValue(env, programid);
 	if(tmplit == NULL){
+		fprintf(stderr, "ERROR programid has no value\n");
 		return NULL;
 	}
-	DataDescription data = Environment_get_import_data_from_iri(
-						env, Literal_get_value(tmplit));
-	free_Literal(tmplit);
+	val = Literal_get_value(tmplit);
+	DataDescription data = Environment_get_import_data_from_iri(env, val);
 	if(data.data == NULL){
+		fprintf(stderr, "ERROR not data for \"%s\"\n", val);
+		free_Literal(tmplit);
 		return NULL;
 	}
+	free_Literal(tmplit);
 	free(data.format);
 	return data.data;
 }

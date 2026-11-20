@@ -19,6 +19,7 @@
 
 (defrule load_subtest
 	(Atom (op _:execute-test) (args ?x))
+	(test (<http://white.gobo/ClipsInfoModelRulemachine1#can-be-imported> ?x))
 	=>
 	(println "subload: " ?x)
 	(<http://white.gobo/ClipsInfoModelRulemachine1#import> ?x "http://www.w3.org/ns/entailment/RDF")
@@ -35,7 +36,8 @@
 	(Frame (object ?x) (slotkey <https://WhiteGobo.github.io/TestsuiteCrate/manifest#exit>) (slotvalue ?exit))
 	=>
 	(bind ?child (<http://white.gobo/new-blanknode>))
-	(<http://WhiteGobo.github.io/CIMR1SimpleOneshot/commands#generate-child>
+	(println "brubru script: " ?script)
+	(<http://WhiteGobo.github.io/CIMR1SimpleOneshot/commands#generate-child-from-string>
 		?child ?script)
 	(<http://WhiteGobo.github.io/CIMR1SimpleOneshot/commands#add-deffacts>
 		?child ?premise
@@ -43,7 +45,9 @@
 	(<http://WhiteGobo.github.io/CIMR1SimpleOneshot/commands#add-end-condition>
 		?child ?exit
 	)
-	(<http://WhiteGobo.github.io/CIMR1SimpleOneshot/commands#run-rules> ?child)
+	(println "run rules for "?name": "
+		(<http://WhiteGobo.github.io/CIMR1SimpleOneshot/commands#run-rules> ?child)
+	)I
 	(bind ?status
 		(<http://WhiteGobo.github.io/CIMR1SimpleOneshot/commands#get-status> ?child))
 	(bind ?HasExpectedData
@@ -62,7 +66,7 @@
 	=>
 	(AssertAtom
 		<http://WhiteGobo.github.io/CIMR1SimpleOneshot/commands#failed-test>
-		?x "missing data")
+		?x "Check query failed: Expected exit data was not found")
 	
 )
 

@@ -10,6 +10,7 @@ typedef Environment Child;
 
 int Environment_register_CIMR1SimpeOneshot_child(Environment*);
 int Environment_generate_child(Environment*, CLIPSValue childid, CLIPSValue programid);
+int Environment_generate_child_from_string(Environment*, CLIPSValue childid, const char* program);
 
 //static void add_end_condition(Environment *env, UDFContext *udfc, UDFValue *out);
 Child* Environment_get_child(Environment*, CLIPSValue childid);

@@ -13,6 +13,7 @@ target_link_libraries(CIMR1SimpleOneshot_ExternalFunctions PUBLIC
 target_link_libraries(CIMR1SimpleOneshot_ExternalFunctions PRIVATE
 	ClipsInfoModelRulemachine1
 	ClipsInfoModelRulemachine1_literals
+	ClipsInfoModelRulemachine1_data_importer
 	CIMR1SimpleOneshot_child
 	CIMR1SimpleOneshot_import
 )

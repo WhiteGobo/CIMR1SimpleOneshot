@@ -162,5 +162,8 @@ void free_CIMR1ImportInformation(CIMR1ImportInformation* x){
 	if(x->importstring != NULL){
 		free(x->importstring);
 	}
+	if(x->rocratelocation != NULL){
+		free(x->rocratelocation);
+	}
 	free(x);
 }

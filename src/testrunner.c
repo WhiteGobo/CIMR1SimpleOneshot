@@ -19,8 +19,6 @@ int main(int argc, char *argv[]){
 	if(0 != run_all_checks_in_testcrate()){
 		exit(EXIT_FAILURE);
 	}
-	fprintf(stderr, "testfail\n");
-		exit(EXIT_FAILURE);
 	exit(EXIT_SUCCESS);
 }
 

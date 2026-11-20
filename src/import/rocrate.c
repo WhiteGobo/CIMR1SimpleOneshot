@@ -95,7 +95,6 @@ int import_local_rocrate(Environment* env, const char* basepath){
         }
 
 	char* tmp = ROCrateData_relative2iri(&rocrate_data, "ro-crate-metadata.json");
-	fprintf(stderr, "qwertz 6 %s\n", tmp);
 	if(tmp == NULL){
 		return 1;
 	}
@@ -107,6 +106,7 @@ int import_local_rocrate(Environment* env, const char* basepath){
 	FCBCall(fcb, "<http://white.gobo/ClipsInfoModelRulemachine1#import>", &tmpcv);
 	FCBDispose(fcb);
 	free(tmp);
+	release_ROCrateData(rocrate_data);
 	return 0;
 }
 

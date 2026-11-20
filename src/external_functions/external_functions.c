@@ -2,6 +2,7 @@
 #include "namespace_CIMR1SO.h"
 #include "helper.h"
 #include <ClipsInfoModelRulemachine1_literals.h>
+#include <ClipsInfoModelRulemachine1_data_importer.h>
 #include "CIMR1SimpleOneshot_import.h"
 #include "CIMR1SimpleOneshot_child.h"
 
@@ -51,6 +52,7 @@ static void myexit(Environment *env, UDFContext *udfc, UDFValue *out);
 static void myimportrocrate(Environment *env, UDFContext *udfc, UDFValue *out);
 
 static void generate_child(Environment *env, UDFContext *udfc, UDFValue *out);
+static void generate_child_from_string(Environment *env, UDFContext *udfc, UDFValue *out);
 static void add_deffacts(Environment *env, UDFContext *udfc, UDFValue *out);
 static void add_end_condition(Environment *env, UDFContext *udfc, UDFValue *out);
 static void run_rules(Environment *env, UDFContext *udfc, UDFValue *out);
@@ -66,6 +68,8 @@ static const UDFDescription builtinFunctionList_local[] = {
 
 	{"<"_CIMR1SO_generate_child_">", "*", 2, 2, "*",
 		generate_child, "generate_child"},
+	{"<"_CIMR1SO_generate_child_from_string_">", "*", 2, 2, "*",
+		generate_child_from_string, "generate_child_from_string"},
 	{"<"_CIMR1SO_add_deffacts_">", "*", 2, 2, "*",
 		add_deffacts, "add_deffacts"},
 	{"<"_CIMR1SO_add_end_condition_">", "*", 2, 2, "*",
@@ -132,6 +136,32 @@ static void generate_child(Environment *env, UDFContext *udfc, UDFValue *out){
 }
 
 
+static void generate_child_from_string(Environment *env, UDFContext *udfc, UDFValue *out){
+	int err;
+	UDFValue tmpudf;
+	Literal* script_lit;
+	const char* script;
+	CLIPSValue childid;
+	if(!UDFNthArgument(udfc, 1, ANY_TYPE_BITS, &tmpudf)){
+		fprintf(stderr, "Failed to get 1th argument\n");
+		return;
+	}
+	childid.header = tmpudf.header;
+
+	script_lit = UDF_get_nth_as_literal(udfc, 2);
+	script = Literal_get_value(script_lit);
+	if(script == NULL){
+		free_Literal(script_lit);
+		return;
+	}
+	err = Environment_generate_child_from_string(env, childid, script);
+	free_Literal(script_lit);
+	if(err != 0){
+		fprintf(stderr, "ERROR generate_child\n");
+	}
+}
+
+
 static void add_deffacts(Environment *env, UDFContext *udfc, UDFValue *out){
 	fprintf(stderr, "ERROR add_deffacts not implemented\n");
 	out->lexemeValue = CreateBoolean(env, false);
@@ -186,6 +216,10 @@ static void get_status(Environment *env, UDFContext *udfc, UDFValue *out){
 
 static void check_data(Environment *env, UDFContext *udfc, UDFValue *out){
 	bool ret;
+	Literal* datairi_lit;
+	const char* datairi;
+	DataDescription data;
+
 	Child* child;
 	child = UDFC_get_nth_argument_as_child(env, udfc, 1);
 	if(child == NULL){
@@ -193,8 +227,13 @@ static void check_data(Environment *env, UDFContext *udfc, UDFValue *out){
 		out->lexemeValue = CreateBoolean(env, false);
 		return;
 	}
-	fprintf(stderr, "ERROR check_Data not implemented\n");
-	ret = Child_check_rif_data(child, "<http://example.com/A>()", "rifps");
+	datairi_lit = UDF_get_nth_as_literal(udfc, 2);
+	datairi = Literal_get_value(datairi_lit);
+	data = Environment_get_import_data_from_iri(env, datairi);
+	free_Literal(datairi_lit);
+	ret = Child_check_rif_data(child, data.data, data.format);
+	free(data.data);
+	free(data.format);
 	out->lexemeValue = CreateBoolean(env, ret);
 }
 

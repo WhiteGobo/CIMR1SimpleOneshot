@@ -33,6 +33,7 @@ char* testrunner_input_script_as_rif_data(const char* script){
 	op = RIFITerm_new_iri("http://WhiteGobo.github.io/CIMR1SimpleOneshot/input#script");
 	arg = RIFITerm_new_typedliteral(script, NULL);
 	args = RIFITermList_append(NULL, arg);
+	free_RIFITerm(arg);
 	tmpatom = RIFIAtom_new(op, args);
 	RIFIFormulas_add_atom(formulas, tmpatom);
 	free_RIFIAtom(tmpatom);

@@ -7,6 +7,7 @@
 #define _CIMR1SO_import_rocrate_ _CIMR1SO_ "import-rocrate"
 
 #define _CIMR1SO_generate_child_ _CIMR1SO_ "generate-child"
+#define _CIMR1SO_generate_child_from_string_ _CIMR1SO_ "generate-child-from-string"
 #define _CIMR1SO_add_deffacts_ _CIMR1SO_ "add-deffacts"
 #define _CIMR1SO_add_end_condition_ _CIMR1SO_ "add-end-condition"
 #define _CIMR1SO_run_rules_ _CIMR1SO_ "run-rules"
